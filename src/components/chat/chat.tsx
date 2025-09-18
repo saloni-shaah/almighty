@@ -46,6 +46,9 @@ export function Chat() {
     },
   });
 
+  const messageValue = form.watch("message");
+  const isSubmittable = !isLoading && (messageValue.trim() !== "" || !!attachedFile);
+
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isLoading]);
@@ -80,6 +83,8 @@ export function Chat() {
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    if (!isSubmittable) return;
+    
     setIsLoading(true);
     let content = values.message;
     if (attachedFile) {
@@ -219,7 +224,7 @@ export function Chat() {
             </div>
             <Button
               type="submit"
-              disabled={isLoading || !form.formState.isValid}
+              disabled={!isSubmittable}
               size="icon"
               aria-label="Send message"
               className="bg-accent hover:bg-accent/90 shrink-0 transition-all active:scale-95 self-end"
