@@ -27,7 +27,7 @@ import {
 import Image from 'next/image';
 
 const formSchema = z.object({
-  message: z.string().min(1, { message: "Message cannot be empty." }),
+  message: z.string(),
 });
 
 export function Chat() {
@@ -73,6 +73,10 @@ export function Chat() {
       };
       reader.readAsDataURL(file);
     }
+    // Reset file input to allow selecting the same file again
+    if (event.target) {
+        event.target.value = '';
+    }
   };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
@@ -84,7 +88,7 @@ export function Chat() {
 
     const userMessage: Message = { role: "user", content: content };
     setMessages((prev) => [...prev, userMessage]);
-    form.reset();
+    form.reset({ message: '' });
 
     const response = await getClaudeResponse({
       message: values.message,
@@ -215,7 +219,7 @@ export function Chat() {
             </div>
             <Button
               type="submit"
-              disabled={isLoading}
+              disabled={isLoading || !form.formState.isValid}
               size="icon"
               aria-label="Send message"
               className="bg-accent hover:bg-accent/90 shrink-0 transition-all active:scale-95 self-end"

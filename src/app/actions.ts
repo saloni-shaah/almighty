@@ -8,8 +8,8 @@ const actionSchema = z.object({
   message: z.string(),
   context: z.string(),
   file: z.object({
-    dataUrl: z.string(),
     name: z.string(),
+    dataUrl: z.string(),
   }).optional(),
 });
 

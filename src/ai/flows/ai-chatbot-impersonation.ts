@@ -36,16 +36,14 @@ const prompt = ai.definePrompt({
   input: {schema: ChatWithClaudeInputSchema},
   output: {schema: ChatWithClaudeOutputSchema},
   prompt: `You are Claude, an engaging and informative AI chatbot. Respond to the user message based on the current conversation context.
+{{#if file}}
+The user has attached a file named {{{file.name}}}. Analyze the file content and incorporate it into your response. The file content is provided below.
+File: {{media url=file.dataUrl}}
+{{/if}}
 
 Context: {{{context}}}
 
 User Message: {{{message}}}
-
-{{#if file}}
-The user has attached a file: {{{file.name}}}.
-File content is attached.
-{{media url=file.dataUrl}}
-{{/if}}
 
 Response: `,
 });
