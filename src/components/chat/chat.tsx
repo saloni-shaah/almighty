@@ -124,11 +124,11 @@ export function Chat() {
   }
 
   return (
-    <Card className="w-full max-w-3xl h-full flex flex-col shadow-lg rounded-xl">
-      <CardHeader className="flex flex-row items-center justify-between border-b">
+    <Card className="w-full max-w-3xl h-full flex flex-col shadow-lg rounded-xl bg-background/80 backdrop-blur-sm border-white/10">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-white/10">
         <div className="flex items-center gap-2">
           <AlmightyLogo className="h-6 w-6" />
-          <CardTitle className="font-headline text-xl md:text-2xl">
+          <CardTitle className="font-headline text-xl md:text-2xl text-white">
             Almighty Chat
           </CardTitle>
         </div>
@@ -167,7 +167,7 @@ export function Chat() {
           </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="p-4 border-t bg-background/95">
+      <CardFooter className="p-4 border-t border-white/10 bg-background/80">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -215,7 +215,7 @@ export function Chat() {
                       placeholder="Type a message..."
                       autoComplete="off"
                       disabled={isLoading}
-                      className="text-base"
+                      className="text-base bg-transparent border-white/20 focus:border-primary focus:ring-primary/50"
                       {...field}
                     />
                   </FormControl>
