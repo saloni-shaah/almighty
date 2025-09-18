@@ -77,7 +77,6 @@ export function Chat() {
       };
       reader.readAsDataURL(file);
     }
-    // Reset file input to allow selecting the same file again
     if (event.target) {
         event.target.value = '';
     }
@@ -124,11 +123,11 @@ export function Chat() {
   }
 
   return (
-    <Card className="w-full max-w-3xl h-full flex flex-col shadow-lg rounded-xl bg-background/80 backdrop-blur-sm border-white/10">
-      <CardHeader className="flex flex-row items-center justify-between border-b border-white/10">
-        <div className="flex items-center gap-2">
-          <AlmightyLogo className="h-6 w-6" />
-          <CardTitle className="font-headline text-xl md:text-2xl text-white">
+    <Card className="w-full max-w-3xl h-full flex flex-col shadow-2xl rounded-xl bg-card/80 backdrop-blur-sm border-white/20">
+      <CardHeader className="flex flex-row items-center justify-between border-b">
+        <div className="flex items-center gap-3">
+          <AlmightyLogo className="h-8 w-8" />
+          <CardTitle className="font-headline text-xl md:text-2xl text-foreground">
             Almighty Chat
           </CardTitle>
         </div>
@@ -136,7 +135,7 @@ export function Chat() {
           variant="ghost"
           size="icon"
           onClick={handleClear}
-          className="text-muted-foreground hover:text-destructive transition-colors"
+          className="text-muted-foreground hover:text-destructive transition-colors duration-300"
           aria-label="Clear conversation"
         >
           <Trash2 className="h-5 w-5" />
@@ -167,7 +166,7 @@ export function Chat() {
           </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="p-4 border-t border-white/10 bg-background/80">
+      <CardFooter className="p-4 border-t bg-card/80">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -192,7 +191,7 @@ export function Chat() {
             />
             <div className="flex-1 space-y-2">
             {attachedFile && (
-              <div className="relative flex items-center gap-2 p-2 rounded-md bg-muted/50 border text-sm">
+              <div className="relative flex items-center gap-2 p-2 rounded-md bg-muted/50 border text-sm animate-fade-in">
                 {attachedFile.type.startsWith('image/') ? (
                     <Image src={attachedFile.dataUrl} alt={attachedFile.name} width={24} height={24} className="rounded-sm" />
                 ) : (
@@ -215,7 +214,7 @@ export function Chat() {
                       placeholder="Type a message..."
                       autoComplete="off"
                       disabled={isLoading}
-                      className="text-base bg-transparent border-white/20 focus:border-primary focus:ring-primary/50"
+                      className="text-base bg-transparent border-input focus:border-primary focus:ring-2 focus:ring-primary/50 transition-all duration-300"
                       {...field}
                     />
                   </FormControl>
@@ -228,7 +227,7 @@ export function Chat() {
               disabled={!isSubmittable}
               size="icon"
               aria-label="Send message"
-              className="bg-accent hover:bg-accent/90 shrink-0 transition-all active:scale-95 self-end"
+              className="bg-accent hover:bg-accent/90 shrink-0 transition-transform duration-200 active:scale-90 self-end"
             >
               <Send className="h-5 w-5" />
             </Button>
