@@ -34,7 +34,7 @@ export function ChatMessage({ role, content }: Message) {
             : "bg-primary text-primary-foreground"
         )}
       >
-        <p className="text-sm leading-relaxed whitespace-pre-wrap">{content}</p>
+        <p className="text-sm leading-relaxed whitespace-pre-wrap">{content.split('\n\nAttached file:')[0]}</p>
       </div>
       {!isAssistant && (
         <Avatar className="h-8 w-8 border bg-background">

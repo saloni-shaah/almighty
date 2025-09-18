@@ -14,6 +14,10 @@ import {z} from 'genkit';
 const ChatWithClaudeInputSchema = z.object({
   message: z.string().describe('The user message to be sent to the chatbot.'),
   context: z.string().describe('The context of the conversation.'),
+  file: z.object({
+    dataUrl: z.string().describe("A file as a data URI that must include a MIME type and use Base64 encoding. Expected format: 'data:<mimetype>;base64,<encoded_data>'."),
+    name: z.string().describe('The name of the file.'),
+  }).optional().describe('An optional file attached by the user.'),
 });
 export type ChatWithClaudeInput = z.infer<typeof ChatWithClaudeInputSchema>;
 
@@ -36,6 +40,12 @@ const prompt = ai.definePrompt({
 Context: {{{context}}}
 
 User Message: {{{message}}}
+
+{{#if file}}
+The user has attached a file: {{{file.name}}}.
+File content is attached.
+{{media url=file.dataUrl}}
+{{/if}}
 
 Response: `,
 });

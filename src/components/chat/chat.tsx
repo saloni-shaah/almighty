@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Send, Sparkles, Trash2 } from "lucide-react";
+import { Paperclip, Send, Sparkles, Trash2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -24,6 +24,7 @@ import {
   ChatMessageLoading,
   type Message,
 } from "@/components/chat/chat-message";
+import Image from 'next/image';
 
 const formSchema = z.object({
   message: z.string().min(1, { message: "Message cannot be empty." }),
@@ -35,6 +36,8 @@ export function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [attachedFile, setAttachedFile] = useState<{name: string, dataUrl: string, type: string} | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,23 +53,46 @@ export function Chat() {
   const handleClear = () => {
     setMessages([]);
     setContext("");
+    setAttachedFile(null);
     toast({
       title: "Conversation cleared",
       description: "You can start a new conversation now.",
     });
   };
 
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setAttachedFile({
+          name: file.name,
+          dataUrl: e.target?.result as string,
+          type: file.type
+        });
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsLoading(true);
-    const userMessage: Message = { role: "user", content: values.message };
+    let content = values.message;
+    if (attachedFile) {
+        content += `\n\nAttached file: ${attachedFile.name}`;
+    }
+
+    const userMessage: Message = { role: "user", content: content };
     setMessages((prev) => [...prev, userMessage]);
     form.reset();
 
     const response = await getClaudeResponse({
       message: values.message,
       context: context,
+      file: attachedFile ? { name: attachedFile.name, dataUrl: attachedFile.dataUrl } : undefined,
     });
-
+    
+    setAttachedFile(null);
     setIsLoading(false);
 
     if (response.success) {
@@ -135,8 +161,40 @@ export function Chat() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="flex w-full items-center space-x-2"
+            className="flex w-full items-start space-x-2"
           >
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+              className="text-muted-foreground"
+            >
+              <Paperclip className="h-5 w-5" />
+              <span className="sr-only">Attach file</span>
+            </Button>
+             <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              className="hidden"
+            />
+            <div className="flex-1 space-y-2">
+            {attachedFile && (
+              <div className="relative flex items-center gap-2 p-2 rounded-md bg-muted/50 border text-sm">
+                {attachedFile.type.startsWith('image/') ? (
+                    <Image src={attachedFile.dataUrl} alt={attachedFile.name} width={24} height={24} className="rounded-sm" />
+                ) : (
+                    <Paperclip className="h-4 w-4" />
+                )}
+                <span className="truncate flex-1">{attachedFile.name}</span>
+                <Button variant="ghost" size="icon" className="h-6 w-6" onClick={() => setAttachedFile(null)}>
+                    <X className="h-4 w-4"/>
+                    <span className="sr-only">Remove file</span>
+                </Button>
+              </div>
+            )}
             <FormField
               control={form.control}
               name="message"
@@ -154,12 +212,13 @@ export function Chat() {
                 </FormItem>
               )}
             />
+            </div>
             <Button
               type="submit"
               disabled={isLoading}
               size="icon"
               aria-label="Send message"
-              className="bg-accent hover:bg-accent/90 shrink-0 transition-all active:scale-95"
+              className="bg-accent hover:bg-accent/90 shrink-0 transition-all active:scale-95 self-end"
             >
               <Send className="h-5 w-5" />
             </Button>

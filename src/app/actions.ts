@@ -7,6 +7,10 @@ import { z } from "zod";
 const actionSchema = z.object({
   message: z.string(),
   context: z.string(),
+  file: z.object({
+    dataUrl: z.string(),
+    name: z.string(),
+  }).optional(),
 });
 
 export async function getClaudeResponse(input: ChatWithClaudeInput) {
