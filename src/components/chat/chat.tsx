@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { Paperclip, Send, Sparkles, Trash2, X } from "lucide-react";
+import { Paperclip, Send, Trash2, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -25,6 +25,7 @@ import {
   type Message,
 } from "@/components/chat/chat-message";
 import Image from 'next/image';
+import { AlmightyLogo } from '@/components/ui/logo';
 
 const formSchema = z.object({
   message: z.string(),
@@ -126,7 +127,7 @@ export function Chat() {
     <Card className="w-full max-w-3xl h-full flex flex-col shadow-lg rounded-xl">
       <CardHeader className="flex flex-row items-center justify-between border-b">
         <div className="flex items-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" />
+          <AlmightyLogo className="h-6 w-6" />
           <CardTitle className="font-headline text-xl md:text-2xl">
             Almighty Chat
           </CardTitle>
@@ -147,7 +148,7 @@ export function Chat() {
             {messages.length === 0 ? (
               <div className="text-center text-muted-foreground pt-16 flex flex-col items-center gap-4 animate-fade-in">
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                  <Sparkles className="h-8 w-8 text-primary" />
+                   <AlmightyLogo className="h-8 w-8" />
                 </div>
                 <div className="space-y-1">
                   <p className="text-lg font-semibold text-foreground">
