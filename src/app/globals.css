@@ -80,5 +80,9 @@
   }
   body {
     @apply bg-background text-foreground;
+    background-image: url(https://storage.googleapis.com/aai-web-samples/app-prototyper/bg.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
   }
 }
